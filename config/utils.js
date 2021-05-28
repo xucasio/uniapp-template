@@ -3,12 +3,12 @@ import store from '@/store';
 import base from '@/config/baseUrl';
 import { getAppWxLatLon } from '@/plugins/utils';
 // #ifdef H5
-import { getLatLonH5, publicShareFun, wxPublicPay, getBrowser, appMutual } from '@/config/html5Utils';
+import { getLatLonH5, publicShareFun, wxPublicPay, getBrowser,appMutual } from '@/config/html5Utils';
 // 公众号分享
 export const publicShare = publicShareFun;
 // #endif
 // #ifdef APP-PLUS
-import appShareFun, {closeShare} from '@/plugins/share';
+import appShareFun, {closeShare} from '@/uni_modules/zhouWei-APPshare/js_sdk/appShare';
 // APP分享
 export const appShare = function(data,callbcak){
 	return appShareFun({
@@ -23,21 +23,41 @@ export const closeAppShare = closeShare;
 
 // #ifdef MP-WEIXIN
 // 微信小程序分享
-export const wxShare = function (title,path) {
+export const wxShare = function (data = {}) {
 	let shareInfo = {
-		title: title || base.share.title,
+		title: data.title || base.share.title,
 	};
-	if(path && typeof(path) == "string"){
-		shareInfo.path = path;
-	}else if(path === undefined){
-		shareInfo.path = base.share.path;
+	if(data.path && typeof(data.path) == "string"){
+		shareInfo.path = data.path;
+	} else if(data.path != 1){
+		shareInfo.path = "pages/home/home";
 	}
-	if (store.state.userInfo.token) {
-		if (shareInfo.path.indexOf("?") >= 0) {
-			shareInfo.path += "&recommendCode=" + store.state.userInfo.uid;
+	if(data.imageUrl){
+		shareInfo.imageUrl = data.imageUrl;
+	}
+	let userInfo = store.state.userInfo;
+	if(!(userInfo && userInfo.uid)){
+		userInfo = uni.getStorageSync("userInfo");
+	}
+	if (userInfo && userInfo.uid) {
+		if(data.query && typeof(data.query) == "object"){
+			data.query.recommendCode = userInfo.uid;
 		} else {
-			shareInfo.path += "?recommendCode=" + store.state.userInfo.uid;
+			data.query = {
+				recommendCode: userInfo.uid
+			};
 		}
+	}
+	if(data.query && typeof(data.query) == "object"){
+		Object.keys(data.query).forEach((key,index) => {
+			if(index > 0 && shareInfo.query){
+				shareInfo.query += "&" + key + "=" + data.query[key];
+				shareInfo.path += "&" + key + "=" + data.query[key];
+			} else {
+				shareInfo.query = key + "=" + data.query[key];
+				shareInfo.path += "?" + key + "=" + data.query[key];
+			}
+		});
 	}
 	return shareInfo;
 }
@@ -112,22 +132,31 @@ export const setPayAssign = function(orderInfo, callback) {
 	//支付
 	// #ifdef APP-PLUS
 	uni.navigateTo({
-		url: '/pages/template/pay?orderNo=' + orderInfo.orderNo + '&price=' + orderInfo.price + '&title=' + orderInfo.title
+		url: '/pages/home/weChatPay?orderNo=' + orderInfo.orderNo + '&price=' + orderInfo.price + '&title=' + orderInfo.title
 	});
 	// #endif 
 	// #ifdef MP-WEIXIN
 	setPay({
 		...orderInfo,
 		type: "smallPay"
-	}, callback);
+	}, res => {
+		if(res.success){
+			uni.redirectTo({
+				url: "/pages/shopCar/paySuccess?orderNo=" + orderInfo.orderNo
+			});
+		}
+	});
 	// #endif
 	// #ifdef H5
 	if (getBrowser() === '微信') {
 		wxPublicPay({
 			orderNo: orderInfo.orderNo
+		}, function(){
+			uni.redirectTo({
+				url: "/pages/shopCar/paySuccess?orderNo=" + orderInfo.orderNo
+			});
 		});
 	} else {
-		// H5嵌套在APP里面，调用app支付方法
 		appMutual('setJumpPay', orderInfo);
 	}
 	// #endif

@@ -3,6 +3,8 @@ import App from './App'
 //数据管理中心
 import store from '@/store'
 Vue.prototype.$store = store;
+// 工具
+import '@/plugins/utils.js';
 //权限配置中心
 import base from '@/config/baseUrl'
 Vue.prototype.$base = base;
@@ -22,23 +24,10 @@ Vue.config.productionTip = false;
 //微信SDK
 import '@/plugins/wxJsSDK.js';
 // #endif
-
-
-
 //全局组件
-import zhouWeiNavBar from "@/components/common/zhouWei-navBar";
-Vue.component("nav-bar", zhouWeiNavBar);
-import publicModule from "@/components/common/public-module.vue";
-Vue.component("public-module", publicModule);
-import MescrollBody from "@/components/common/mescroll-uni/mescroll-body.vue";
+import MescrollBody from "@/components/mescroll-uni/mescroll-body.vue";
 Vue.component("mescroll-body", MescrollBody);
 App.mpType = 'app'
-// colorui
-import basics from './colorui/basics/home.vue'
-Vue.component('basics',basics)
-
-import cuCustom from './colorui/components/cu-custom.vue'
-Vue.component('cu-custom',cuCustom)
 
 const app = new Vue({
 	store,

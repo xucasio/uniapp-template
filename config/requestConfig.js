@@ -1,4 +1,4 @@
-import request from "@/plugins/request";
+import request from "@/uni_modules/zhouWei-request/js_sdk/request";
 import store from '@/store';
 import base from '@/config/baseUrl';
 // #ifdef H5
@@ -13,7 +13,7 @@ import {
 // #endif
 let version_code = '';
 // #ifdef APP-PLUS
-import { getCurrentNo } from '@/plugins/APPUpdate';
+import { getCurrentNo } from '@/uni_modules/zhouWei-APPUpdate/js_sdk/appUpdate';
 setTimeout(() => {
 	getCurrentNo(function(res){
 		console.log("版本号",res);
@@ -30,6 +30,8 @@ let $http = new request({
 	fileUrl: base.baseUrl,
 	// 服务器上传图片默认url
 	defaultUploadUrl: "api/common/v1/upload_image",
+	// 服务器上传文件名称
+	defaultFileName: "file",
 	//设置请求头（如果使用报错跨域问题，可能是content-type请求类型和后台那边设置的不一致）
 	header: {
 		'Content-Type': 'application/json;charset=UTF-8',
@@ -61,19 +63,31 @@ $http.requestStart = function(options) {
 		//打开加载动画
 		store.commit("setLoadingShow", true);
 	}
-	// 图片上传大小限制
-	if (options.method == "FILE" && options.maxSize) {
+	// 图片、视频上传大小限制
+	if (options.method == "FILE") {
 		// 文件最大字节: options.maxSize 可以在调用方法的时候加入参数
-		let maxSize = options.maxSize;
+		let maxSize = options.maxSize || '';
 		for (let item of options.files) {
-			if (item.size > maxSize) {
-				setTimeout(() => {
-					uni.showToast({
-						title: "图片过大，请重新上传",
-						icon: "none"
-					});
-				}, 500);
-				return false;
+			if(item.fileType == 'image'){
+				if (maxSize && item.size > maxSize) {
+					setTimeout(() => {
+						uni.showToast({
+							title: "图片过大，请重新上传",
+							icon: "none"
+						});
+					}, 500);
+					return false;
+				}
+			} else if(item.fileType == "video"){
+				if (item.duration < 3) {
+					setTimeout(() => {
+						uni.showToast({
+							title: "视频长度不足3秒，请重新上传",
+							icon: "none"
+						});
+					}, 500);
+					return false;
+				}
 			}
 		}
 	}

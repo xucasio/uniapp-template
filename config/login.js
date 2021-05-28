@@ -92,7 +92,6 @@ function getUserInfo(info, type, callback) {
 }
 //判断是否登录（所有端）
 function judgeLogin(callback, type = "judge"){
-	debugger
     if(store.state.chatScenesInfo.scene == 1154){
         uni.showToast({
         	title: '请前往小程序使用完整服务',
@@ -126,7 +125,6 @@ function judgeLogin(callback, type = "judge"){
                 });
             }
         } else {
-			debugger
             // #ifdef MP
             onLogin(type, callback);
             // #endif

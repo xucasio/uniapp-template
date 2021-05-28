@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "uni-app",
-  "usingComponents": {
-    "z-navigation": "/components/module/navigation"
-  }
-}
