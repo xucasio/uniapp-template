@@ -81,8 +81,10 @@ export default {
 	onHide: function() {}
 };
 </script>
-
 <style lang="scss">
+// uviewUI
+@import "./uview-ui/index.scss";
+
 /* #ifndef APP-NVUE */
 @import './style/common.scss';
 @import './style/input.scss';

@@ -62,11 +62,12 @@
 			<view class="input_box btm_line">
 				<view class="name required">图片上传</view>
 				<view class="upload_info">
-					<view class="upload_img">
+<!-- 					<view class="upload_img">
 						<image src="http://qn.kemean.cn//upload/202005/21/1590052073042esemthi3.jpg" mode="aspectFill"></image>
 						<view class="delete"></view>
 					</view>
-					<view class="upload_img upload"></view>
+					<view class="upload_img upload"></view> -->
+					<u-upload :action="action" :file-list="fileList" ></u-upload>
 				</view>
 				<view class="prompt">提示：建议图片上传规格为200*200</view>
 			</view>
@@ -77,6 +78,9 @@
 			<view class="input_box btm_line line">
 				<view class="name">控制显示线</view>
 				<view class="input_info"><input type="text" placeholder="请输入" /></view>
+			</view>
+			<view class="input_box">
+				<u-select v-model="show" :list="list"></u-select>
 			</view>
 			<view class="protocol">
 				<view class="active"></view>
@@ -108,7 +112,14 @@ export default {
 					value: 2
 				}
 			],
-			pickerName: {}
+			pickerName: {},
+			action: 'http://www.example.com/upload',
+			fileList: [
+				{
+					url: 'http://www.csmar.com/images/prod02.png',
+				}
+			],
+			show: true
 		};
 	},
 	//方法

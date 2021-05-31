@@ -1,9 +1,54 @@
 <template>
 	<view>
-		<z-nav-bar backState="2000" title="我的"></z-nav-bar>
+	<view>
+			<u-navbar :is-back="false" title="　" :border-bottom="false">
+				<view class="u-flex u-row-right" style="width: 100%;">
+					<view class="camera u-flex u-row-center">
+						<u-icon name="camera-fill" color="#000000" size="48"></u-icon>
+					</view>
+				</view>
+			</u-navbar>
+			<view class="u-flex user-box u-p-l-30 u-p-r-20 u-p-b-30">
+				<view class="u-m-r-10">
+					<u-avatar :src="pic" size="140"></u-avatar>
+				</view>
+				<view class="u-flex-1">
+					<view class="u-font-18 u-p-b-20">uView ui</view>
+					<view class="u-font-14 u-tips-color">微信号:helang_uView</view>
+				</view>
+				<view class="u-m-l-10 u-p-10">
+					<u-icon name="scan" color="#969799" size="28"></u-icon>
+				</view>
+				<view class="u-m-l-10 u-p-10">
+					<u-icon name="arrow-right" color="#969799" size="28"></u-icon>
+				</view>
+			</view>
+			
+			<view class="u-m-t-20">
+				<u-cell-group>
+					<u-cell-item icon="rmb-circle" title="支付"></u-cell-item>
+				</u-cell-group>
+			</view>
+			
+			<view class="u-m-t-20">
+				<u-cell-group>
+					<u-cell-item icon="star" title="收藏"></u-cell-item>
+					<u-cell-item icon="photo" title="相册"></u-cell-item>
+					<u-cell-item icon="coupon" title="卡券"></u-cell-item>
+					<u-cell-item icon="heart" title="关注"></u-cell-item>
+				</u-cell-group>
+			</view>
+			
+			<view class="u-m-t-20">
+				<u-cell-group>
+					<u-cell-item icon="setting" title="设置"></u-cell-item>
+				</u-cell-group>
+			</view>
+		</view>
 		<!-- 公共组件-每个页面必须引入 -->
 		<public-module></public-module>
-		<view class="video_box" v-if="videoShow" @click="onCloseVideo"><video :src="videoUrl" autoplay="true" controls></video></view>
+		<!-- <view class="video_box" v-if="videoShow" @click="onCloseVideo"><video :src="videoUrl" autoplay="true" controls></video></view> -->
+		
 		<z-navigation></z-navigation>
 	</view>
 </template>
@@ -18,10 +63,8 @@ export default {
 	mixins:[baseMixin],
 	data() {
 		return {
-			videoUrl: '',
-			videoShow: false,
-			swiperIndex: 0,
-			bannerList: [1, 1, 1, 1]
+				pic:'https://uviewui.com/common/logo.png',
+				show:true
 		};
 	},
 	computed: {
@@ -86,82 +129,19 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import '@/style/mixin.scss';
-.nav_list {
-	background-color: #fff;
-	padding: 30upx;
-	display: flex;
-	align-items: center;
-	position: relative;
-	margin-bottom: 10upx;
-	&:active {
-		background-color: #F5f5f5;
-	}
-	image {
-		width: 40upx;
-		height: 40upx;
-	}
-	text {
-		font-size: 28upx;
-		color: #333;
-		margin-left: 30upx;
-	}
-	&::after {
-		content: '';
-		position: absolute;
-		right: 30upx;
-		top: 50%;
-		transform: translateY(-50%);
-		width: 40upx;
-		height: 40upx;
-		background-image: url('../../static/demo/icon_right.png');
-		background-position: center center;
-		background-repeat: no-repeat;
-		background-size: cover;
-	}
+page{
+	background-color: #ededed;
 }
 
-
-
-.video_box {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: #000;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	video {
-		width: 100%;
+.camera{
+	width: 54px;
+	height: 44px;
+	
+	&:active{
+		background-color: #ededed;
 	}
 }
-.banner_swiper_box {
-	padding-top: 15upx;
+.user-box{
 	background-color: #fff;
-	.banner_swiper {
-		height: 315upx;
-		
-		swiper-item {
-			box-sizing: border-box;
-			display: flex;
-			align-items: center;
-			.banner_img {
-				width: 100%;
-				height: 100%;
-				transform: scale(0.9);
-				transition: all 0.4s;
-				&.active {
-					transform: scale(1);
-				}
-				image {
-					width: 100%;
-					height: 100%;
-					box-shadow: 0upx 20upx 30upx 0upx rgba(0, 0, 0, 0.1);
-					border-radius: 20upx;
-				}
-			}
-		}
-	}
 }
 </style>

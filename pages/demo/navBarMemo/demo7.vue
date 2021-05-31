@@ -4,7 +4,8 @@
 		<z-nav-bar title="中插槽-搜索框">
 			<view class="search_box">
 				<text class="icon_search"></text>
-				<text class="prompt">搜索目的地/职位等</text>
+				<!-- <text class="prompt">搜索目的地/职位等</text> -->
+				<u-input class="prompt" v-model="value" :type="type" :border="border" />
 			</view>
 		</z-nav-bar>
 		<!---示例代码 结束---->
@@ -20,7 +21,11 @@
 <script>
 export default {
 	data() {
-		return {};
+		return {
+			value: '',
+			type: 'text',
+			border: false
+		};
 	},
 	onLoad() {},
 	methods: {}

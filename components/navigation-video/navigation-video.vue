@@ -28,11 +28,11 @@ export default {
 			path: '',
 			navigationList: [
 				{
-					pagePath: 'pages/business/index',
+					pagePath: 'pages/order/index',
 					// pagePath: 'pages/template/addTemplate',
 					iconPath: 'static/icon/tab/icon_home.png',
 					selectedIconPath: 'static/icon/tab/icon_home_c.png',
-					text: '业务'
+					text: '订单'
 				},
 				{
 					pagePath: 'pages/product/index',

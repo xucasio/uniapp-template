@@ -1,9 +1,42 @@
 <template>
 	<view>
 		<z-nav-bar backState="2000" title="产品"></z-nav-bar>
+		<view class="u-wrap">
+			<view class="u-search-box">
+				<view class="u-search-inner">
+					<u-icon name="search" color="#909399" :size="28"></u-icon>
+					<text class="u-search-text">搜索uView</text>
+				</view>
+			</view>
+			<view class="u-menu-wrap">
+				<scroll-view scroll-y scroll-with-animation class="u-tab-view menu-scroll-view" :scroll-top="scrollTop">
+					<view v-for="(item,index) in tabbar" :key="index" class="u-tab-item" :class="[current==index ? 'u-tab-item-active' : '']"
+					 :data-current="index" @tap.stop="swichMenu(index)">
+						<text class="u-line-1">{{item.name}}</text>
+					</view>
+				</scroll-view>
+				<block v-for="(item,index) in tabbar" :key="index">
+					<scroll-view scroll-y class="right-box" v-if="current==index">
+						<view class="page-view">
+							<view class="class-item">
+								<view class="item-title">
+									<text>{{item.name}}</text>
+								</view>
+								<view class="item-container">
+									<view class="thumb-box" v-for="(item1, index1) in item.foods" :key="index1">
+										<image class="item-menu-image" :src="item1.icon" mode=""></image>
+										<view class="item-menu-name">{{item1.name}}</view>
+									</view>
+								</view>
+							</view>
+						</view>
+					</scroll-view>
+				</block>
+			</view>
+		</view>
 		<!-- 公共组件-每个页面必须引入 -->
 		<public-module></public-module>
-		<view class="video_box" v-if="videoShow" @click="onCloseVideo"><video :src="videoUrl" autoplay="true" controls></video></view>
+		<!-- <view class="video_box" v-if="videoShow" @click="onCloseVideo"><video :src="videoUrl" autoplay="true" controls></video></view> -->
 		<z-navigation></z-navigation>
 	</view>
 </template>
@@ -11,6 +44,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import {baseMixin} from '@/mixins/mixins';
+import classifyData from "@/common/classify.data.js";
 // #ifdef MP-WEIXIN
 import {onLogin} from '@/config/login';
 // #endif
@@ -18,10 +52,11 @@ export default {
 	mixins:[baseMixin],
 	data() {
 		return {
-			videoUrl: '',
-			videoShow: false,
-			swiperIndex: 0,
-			bannerList: [1, 1, 1, 1]
+			tabbar: classifyData,
+			scrollTop: 0, //tab标题的滚动条位置
+			current: 0, // 预设当前项的值
+			menuHeight: 0, // 左边菜单的高度
+			menuItemHeight: 0, // 左边菜单item的高度
 		};
 	},
 	computed: {
@@ -44,33 +79,36 @@ export default {
 	},
 	//方法
 	methods: {
-		...mapMutations(['setWebViewUrl']),
-		pageData() {},
-		onPageJump(url) {
-			uni.navigateTo({
-				url: url
-			});
+		getImg() {
+			return Math.floor(Math.random() * 35);
 		},
-		// 轮播图点击
-		onBanner(item) {
-			if (item.jumpType == 1201) {
-				// #ifdef H5
-				window.open(item.jumpRecord.webViewUrl);
-				// #endif 
-				// #ifndef H5
-				this.$store.commit("setWebViewUrl", item.jumpRecord.webViewUrl);
-				uni.navigateTo({
-					url: '/pages/home/webView'
-				});
-				// #endif
-			} else if (item.jumpType == 1301) {
-				this.videoUrl = item.jumpRecord.videoUrl;
-				this.videoShow = true;
+		// 点击左边的栏目切换
+		async swichMenu(index) {
+			if(index == this.current) return ;
+			this.current = index;
+			// 如果为0，意味着尚未初始化
+			if(this.menuHeight == 0 || this.menuItemHeight == 0) {
+				await this.getElRect('menu-scroll-view', 'menuHeight');
+				await this.getElRect('u-tab-item', 'menuItemHeight');
 			}
+			// 将菜单菜单活动item垂直居中
+			this.scrollTop = index * this.menuItemHeight + this.menuItemHeight / 2 - this.menuHeight / 2;
 		},
-		// 轮播图变化
-		onSwiperChange(e){
-			this.swiperIndex = e.detail.current;
+		// 获取一个目标元素的高度
+		getElRect(elClass, dataVal) {
+			new Promise((resolve, reject) => {
+				const query = uni.createSelectorQuery().in(this);
+				query.select('.' + elClass).fields({size: true},res => {
+					// 如果节点尚未生成，res值为null，循环调用执行
+					if(!res) {
+						setTimeout(() => {
+							this.getElRect(elClass);
+						}, 10);
+						return ;
+					}
+					this[dataVal] = res.height;
+				}).exec();
+			})
 		}
 	},
 	//页面隐藏
@@ -89,82 +127,121 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import '@/style/mixin.scss';
-.nav_list {
-	background-color: #fff;
-	padding: 30upx;
-	display: flex;
-	align-items: center;
-	position: relative;
-	margin-bottom: 10upx;
-	&:active {
-		background-color: #F5f5f5;
+	.u-wrap {
+		height: calc(100vh);
+		/* #ifdef H5 */
+		height: calc(100vh - var(--window-top));
+		/* #endif */
+		display: flex;
+		flex-direction: column;
 	}
-	image {
-		width: 40upx;
-		height: 40upx;
+
+	.u-search-box {
+		padding: 18rpx 30rpx;
 	}
-	text {
-		font-size: 28upx;
-		color: #333;
-		margin-left: 30upx;
+
+	.u-menu-wrap {
+		flex: 1;
+		display: flex;
+		overflow: hidden;
 	}
-	&::after {
-		content: '';
+
+	.u-search-inner {
+		background-color: rgb(234, 234, 234);
+		border-radius: 100rpx;
+		display: flex;
+		align-items: center;
+		padding: 10rpx 16rpx;
+	}
+
+	.u-search-text {
+		font-size: 26rpx;
+		color: $u-tips-color;
+		margin-left: 10rpx;
+	}
+
+	.u-tab-view {
+		width: 200rpx;
+		height: 100%;
+	}
+
+	.u-tab-item {
+		height: 110rpx;
+		background: #f6f6f6;
+		box-sizing: border-box;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 26rpx;
+		color: #444;
+		font-weight: 400;
+		line-height: 1;
+	}
+	
+	.u-tab-item-active {
+		position: relative;
+		color: #000;
+		font-size: 30rpx;
+		font-weight: 600;
+		background: #fff;
+	}
+	
+	.u-tab-item-active::before {
+		content: "";
 		position: absolute;
-		right: 30upx;
-		top: 50%;
-		transform: translateY(-50%);
-		width: 40upx;
-		height: 40upx;
-		background-image: url('../../static/demo/icon_right.png');
-		background-position: center center;
-		background-repeat: no-repeat;
-		background-size: cover;
+		border-left: 4px solid $u-type-primary;
+		height: 32rpx;
+		left: 0;
+		top: 39rpx;
 	}
-}
 
-
-
-.video_box {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: #000;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	video {
-		width: 100%;
+	.u-tab-view {
+		height: 100%;
 	}
-}
-.banner_swiper_box {
-	padding-top: 15upx;
-	background-color: #fff;
-	.banner_swiper {
-		height: 315upx;
-		
-		swiper-item {
-			box-sizing: border-box;
-			display: flex;
-			align-items: center;
-			.banner_img {
-				width: 100%;
-				height: 100%;
-				transform: scale(0.9);
-				transition: all 0.4s;
-				&.active {
-					transform: scale(1);
-				}
-				image {
-					width: 100%;
-					height: 100%;
-					box-shadow: 0upx 20upx 30upx 0upx rgba(0, 0, 0, 0.1);
-					border-radius: 20upx;
-				}
-			}
-		}
+	
+	.right-box {
+		background-color: rgb(250, 250, 250);
 	}
-}
+	
+	.page-view {
+		padding: 16rpx;
+	}
+	
+	.class-item {
+		margin-bottom: 30rpx;
+		background-color: #fff;
+		padding: 16rpx;
+		border-radius: 8rpx;
+	}
+	
+	.item-title {
+		font-size: 26rpx;
+		color: $u-main-color;
+		font-weight: bold;
+	}
+	
+	.item-menu-name {
+		font-weight: normal;
+		font-size: 24rpx;
+		color: $u-main-color;
+	}
+	
+	.item-container {
+		display: flex;
+		flex-wrap: wrap;
+	}
+	
+	.thumb-box {
+		width: 33.333333%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		margin-top: 20rpx;
+	}
+	
+	.item-menu-image {
+		width: 120rpx;
+		height: 120rpx;
+	}
 </style>

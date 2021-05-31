@@ -1,6 +1,9 @@
 {
+	// 配置easycom组件模式 (uview)
+	"easycom": {
+		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+	},
 	"pages": [
-		// 新增页面
 		{
 			"path": "pages/my/index",
 			"style": {
@@ -26,9 +29,9 @@
 			}
 		},
 		{
-			"path": "pages/business/index",
+			"path": "pages/order/index",
 			"style": {
-				"navigationBarTitleText": "业务"
+				"navigationBarTitleText": "订单"
 			}
 		},
 		{
@@ -403,10 +406,10 @@
 				"selectedIconPath": "static/icon/tab/icon_home_c.png",
 				"text": "首页"
 			},{
-				"pagePath": "pages/business/index",
+				"pagePath": "pages/order/index",
 				"iconPath": "static/icon/tab/icon_home.png",
 				"selectedIconPath": "static/icon/tab/icon_home_c.png",
-				"text": "业务"
+				"text": "订单"
 			},
 			{
 				"pagePath": "pages/product/index",
@@ -436,4 +439,6 @@
 			"query": "" //启动参数，在页面的onLoad函数里面得到
 		}]
 	}
+	
+
 }

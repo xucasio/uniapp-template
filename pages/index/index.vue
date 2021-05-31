@@ -14,6 +14,7 @@
 				</swiper-item>
 			</swiper>
 		</view>
+		<u-button type="success">成功按钮</u-button>
 		<view class="nav_list" @click="onPageJump('/pages/demo/themeColor')">
 			<image :src="'../../static/demo/icon_case.png'" mode="aspectFit"></image>
 			<text>项目主题色介绍</text>
@@ -73,6 +74,8 @@ export default {
 	mixins:[baseMixin],
 	data() {
 		return {
+			value: '123',
+			type: 'text',
 			videoUrl: '',
 			videoShow: false,
 			swiperIndex: 0,
@@ -177,9 +180,6 @@ export default {
 		background-size: cover;
 	}
 }
-
-
-
 .video_box {
 	position: fixed;
 	top: 0;
