@@ -1,5 +1,10 @@
 {
   "pages": [
+    "pages/my/index",
+    "pages/index/index",
+    "pages/product/index",
+    "pages/activity/index",
+    "pages/order/index",
     "pages/template/addTemplate",
     "pages/demo/common",
     "pages/demo/list",
@@ -71,28 +76,34 @@
     "backgroundColor": "#ffffff",
     "list": [
       {
-        "pagePath": "pages/template/addTemplate",
+        "pagePath": "pages/index/index",
         "iconPath": "static/icon/tab/icon_home.png",
         "selectedIconPath": "static/icon/tab/icon_home_c.png",
-        "text": "新增功能"
+        "text": "首页"
       },
       {
-        "pagePath": "pages/demo/common",
+        "pagePath": "pages/order/index",
+        "iconPath": "static/icon/tab/icon_home.png",
+        "selectedIconPath": "static/icon/tab/icon_home_c.png",
+        "text": "订单"
+      },
+      {
+        "pagePath": "pages/product/index",
         "iconPath": "static/icon/tab/icon_wode.png",
         "selectedIconPath": "static/icon/tab/icon_wode_c.png",
-        "text": "组件示例"
+        "text": "产品"
       },
       {
-        "pagePath": "pages/sdkDemo/common",
+        "pagePath": "pages/activity/index",
         "iconPath": "static/icon/tab/icon_xiaoxi.png",
         "selectedIconPath": "static/icon/tab/icon_xiaoxi_c.png",
-        "text": "SDK示例"
+        "text": "活动"
       },
       {
-        "pagePath": "pages/template/common",
+        "pagePath": "pages/my/index",
         "iconPath": "static/icon/tab/icon_xiaoxi.png",
         "selectedIconPath": "static/icon/tab/icon_xiaoxi_c.png",
-        "text": "模板页面"
+        "text": "我的"
       }
     ]
   },

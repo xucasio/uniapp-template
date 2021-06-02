@@ -8,7 +8,8 @@
 				<view class="platformName">{{ base.platformName }}</view>
 				<view class="description" v-if="base.description">{{ base.description }}</view>
 			</view>
-			<button type="primary" hover-class="active" open-type="getUserInfo" @getuserinfo="onAuthorization">授权登录</button>
+			<button v-if="!oldget" type="primary" hover-class="active" open-type="getUserInfo" @getuserinfo="onAuthorization">授权登录</button>
+			<button v-if="oldget" type="primary" hover-class="active" open-type="getUserInfo" @getuserinfo="onAuthorization">授权登录</button>
 		</view>
 	</view>
 </template>
@@ -22,7 +23,8 @@ let clear;
 export default {
 	data() {
 		return {
-			base: base
+			base: base,
+			oldget: true
 		};
 	},
 	computed: {
@@ -46,6 +48,11 @@ export default {
 		//关闭弹窗
 		closePopup() {
 			this.setLoginPopupShow(false);
+		}
+	},
+	onShow() {
+		if (uni.getUserProfile) {
+			this.oldget = false
 		}
 	}
 };

@@ -1,6 +1,6 @@
 {
     "name" : "uniApp-案例",
-    "appid" : "__UNI__uniProject",
+    "appid" : "__UNI__7F580C1",
     "description" : "uniApp-案例",
     "transformPx" : false,
     "icons" : [
@@ -98,7 +98,7 @@
             "minified" : true
         },
         "usingComponents" : true,
-        "appid" : "wx4277c1145515b274",
+        "appid" : "wxa7dc137188cb038e",
         "permission" : {
             "scope.userLocation" : {
                 "desc" : "你的位置信息将用于小程序位置接口的效果展示"

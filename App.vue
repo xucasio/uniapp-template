@@ -33,6 +33,7 @@ export default {
 		// #endif
 	},
 	onShow: function(e) {
+		console.log('测试调试app')
 		// #ifdef MP-WEIXIN
 		//获取二维码携带的参数
 		let scene = decodeURIComponent(e.query.scene);
@@ -41,6 +42,7 @@ export default {
 			//场景值
 			scene: e.scene
 		};
+		
 		scene.forEach(item => {
 			let arr = item.split('=');
 			if (arr.length == 2) {

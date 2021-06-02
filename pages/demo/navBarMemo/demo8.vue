@@ -38,7 +38,7 @@
 	}
 </script>
 
-<style>
+<style lang="scss" scoped>
 	image {
 		width: 750rpx;
 		display: block;

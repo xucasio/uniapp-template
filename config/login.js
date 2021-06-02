@@ -12,6 +12,7 @@ let userInfo = {
 let lastPageUrl = "";
 // 微信小程序登录
 function onLogin(type = "judge",callback) {
+	debugger
 	//判断登录状态
 	if (loginStart) {
 		lastPageUrl = "";
@@ -32,10 +33,27 @@ function onLogin(type = "judge",callback) {
 			success: function(loginRes) {
 				if (loginRes.errMsg == 'login:ok') {
 					code = loginRes.code;
+					if(uni.getUserProfile) {
+						uni.getUserProfile({
+							desc: '登录测试',
+							success: function(infoRes) {
+							// #ifdef MP-WEIXIN
+							console.log('微信getUserProfile信息', infoRes)
+							// #endif
+							getUserInfo(infoRes, "", callback);
+							},
+							fail() {
+								store.commit('setLoginPopupShow', true);
+							}
+						})
+					} else {
 					// 获取用户信息
 					uni.getUserInfo({
 						provider: platform,
 						success: function(infoRes) {
+							// #ifdef MP-WEIXIN
+							console.log('微信获取用户信息', infoRes)
+							// #endif
 							getUserInfo(infoRes, "", callback);
 						},
 						fail() {
@@ -57,6 +75,7 @@ function onLogin(type = "judge",callback) {
 							}
 						}
 					});
+					}
 				}
 			}
 		});

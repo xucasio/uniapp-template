@@ -74,9 +74,9 @@ export default {
 	onLoad(e) {
 		// 隐藏原生的tabbar
 		// #ifdef MP-WEIXIN
-		onLogin(() => {
-			this.getCoupon();
-		});
+		// onLogin(() => {
+		// 	this.getCoupon();
+		// });
 		// #endif
 	},
 	//页面显示

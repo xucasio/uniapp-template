@@ -16,9 +16,9 @@ export const baseMixin={
 		// 隐藏原生的tabbar
 		uni.hideTabBar();
 		// #ifdef MP-WEIXIN
-		onLogin(() => {
-			this.getCoupon(); 
-		});
+		// onLogin(() => {
+		// 	this.getCoupon(); 
+		// });
 		// #endif
 	},
 	//页面显示
